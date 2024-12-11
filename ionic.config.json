@@ -1,0 +1,7 @@
+{
+  "name": "daily-rysia-app",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular-standalone"
+}
