@@ -1,0 +1,23 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Gallery</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-grid>
+    <ion-row>
+      <ion-col size="12" size-sm="10" offset-sm="1" size-md="8" offset-md="2">
+        <div class="gallery">
+          @for(photo of photos(); track photo.id) {
+          <ion-card class="card">
+            <ion-img [src]="photo.photoUrl" class="photo"></ion-img>
+          </ion-card>
+          } @empty {
+          <p>There are currently no photos in the gallery</p>
+          }
+        </div>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>
