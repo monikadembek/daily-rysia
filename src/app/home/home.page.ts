@@ -17,12 +17,13 @@ import {
   IonIcon,
   IonButtons,
   IonButton,
+  AlertController,
 } from '@ionic/angular/standalone';
 import { PhotosService } from '../core/services/photos.service';
 import { Photo } from '../core/models/photo.model';
 import { map, Observable, of } from 'rxjs';
-import { Firestore, CollectionReference, collection } from '@angular/fire/firestore';
-import { RouterLink } from '@angular/router';
+import { CollectionReference } from '@angular/fire/firestore';
+import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../auth/auth.service';
 
 const importsList = [
@@ -61,16 +62,15 @@ export class HomePage implements OnInit {
   destroyRef = inject(DestroyRef);
   isUserAuthenticated: Observable<boolean> = of(false);
 
-  private firestore: Firestore = inject(Firestore);
   photos$: Observable<Partial<Photo[]>> = of([]);
   photosCollection!: CollectionReference;
 
   constructor(
     private photosService: PhotosService,
     private authService: AuthService,
-  ) {
-    this.photosCollection = collection(this.firestore, 'photos');
-  }
+    private alertController: AlertController,
+    private router: Router,
+  ) {}
 
   ngOnInit(): void {
     this.isUserAuthenticated = this.authService.isUserAuthenticated;
@@ -79,6 +79,24 @@ export class HomePage implements OnInit {
 
   async logout() {
     await this.authService.logout();
+    await this.presentAlert('User has been successfully logged out');
+  }
+
+  private async presentAlert(errorMessage: string, header = 'Message'): Promise<void> {
+    const alert = await this.alertController.create({
+      header: header,
+      message: errorMessage,
+      buttons: [
+        {
+          text: 'OK',
+          role: 'confirm',
+          handler: () => {
+            this.router.navigate(['/tabs/home']);
+          },
+        },
+      ],
+    });
+    await alert.present();
   }
 
   getHomePagePhoto(): void {

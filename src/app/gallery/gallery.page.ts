@@ -14,12 +14,14 @@ import {
   IonButtons,
   IonButton,
   IonIcon,
+  AlertController,
 } from '@ionic/angular/standalone';
 import { Photo } from '../core/models/photo.model';
 import { PhotosService } from '../core/services/photos.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Observable, of } from 'rxjs';
 import { AuthService } from '../auth/auth.service';
+import { Router, RouterLink } from '@angular/router';
 
 const importsList = [
   IonGrid,
@@ -37,6 +39,7 @@ const importsList = [
   CommonModule,
   FormsModule,
   AsyncPipe,
+  RouterLink,
 ];
 
 @Component({
@@ -55,6 +58,8 @@ export class GalleryPage implements OnInit {
   constructor(
     private photosService: PhotosService,
     private authService: AuthService,
+    private alertController: AlertController,
+    private router: Router,
   ) {}
 
   ngOnInit() {
@@ -64,6 +69,24 @@ export class GalleryPage implements OnInit {
 
   async logout() {
     await this.authService.logout();
+    await this.presentAlert('User has been successfully logged out');
+  }
+
+  private async presentAlert(errorMessage: string, header = 'Message'): Promise<void> {
+    const alert = await this.alertController.create({
+      header: header,
+      message: errorMessage,
+      buttons: [
+        {
+          text: 'OK',
+          role: 'confirm',
+          handler: () => {
+            this.router.navigate(['/tabs/home']);
+          },
+        },
+      ],
+    });
+    await alert.present();
   }
 
   getPhotos(): void {
