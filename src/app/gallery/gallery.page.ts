@@ -1,5 +1,5 @@
 import { Component, OnInit, signal, inject, DestroyRef } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, AsyncPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
   IonContent,
@@ -36,6 +36,7 @@ const importsList = [
   IonIcon,
   CommonModule,
   FormsModule,
+  AsyncPipe,
 ];
 
 @Component({
