@@ -1,5 +1,5 @@
 import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
-import { DatePipe } from '@angular/common';
+import { DatePipe, AsyncPipe } from '@angular/common';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   IonHeader,
@@ -14,10 +14,16 @@ import {
   IonCardSubtitle,
   IonCardHeader,
   IonCardTitle,
+  IonIcon,
+  IonButtons,
+  IonButton,
 } from '@ionic/angular/standalone';
 import { PhotosService } from '../core/services/photos.service';
 import { Photo } from '../core/models/photo.model';
-import { map } from 'rxjs';
+import { map, Observable, of } from 'rxjs';
+import { Firestore, CollectionReference, collection } from '@angular/fire/firestore';
+import { RouterLink } from '@angular/router';
+import { AuthService } from '../auth/auth.service';
 
 const importsList = [
   IonCardSubtitle,
@@ -32,10 +38,15 @@ const importsList = [
   IonRow,
   IonCol,
   DatePipe,
+  AsyncPipe,
   IonCard,
   IonCardHeader,
   IonCardTitle,
   IonCardSubtitle,
+  IonIcon,
+  IonButtons,
+  IonButton,
+  RouterLink,
 ];
 
 @Component({
@@ -48,11 +59,26 @@ const importsList = [
 export class HomePage implements OnInit {
   photo = signal<Photo | null>(null);
   destroyRef = inject(DestroyRef);
+  isUserAuthenticated: Observable<boolean> = of(false);
 
-  constructor(private photosService: PhotosService) {}
+  private firestore: Firestore = inject(Firestore);
+  photos$: Observable<Partial<Photo[]>> = of([]);
+  photosCollection!: CollectionReference;
+
+  constructor(
+    private photosService: PhotosService,
+    private authService: AuthService,
+  ) {
+    this.photosCollection = collection(this.firestore, 'photos');
+  }
 
   ngOnInit(): void {
+    this.isUserAuthenticated = this.authService.isUserAuthenticated;
     this.getHomePagePhoto();
+  }
+
+  logout() {
+    this.authService.logout();
   }
 
   getHomePagePhoto(): void {

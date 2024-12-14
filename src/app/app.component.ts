@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { IonApp, IonRouterOutlet } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { playCircle, imageOutline } from 'ionicons/icons';
+import { playCircle, imageOutline, logInOutline, powerOutline } from 'ionicons/icons';
 
 @Component({
   selector: 'app-root',
@@ -11,6 +11,6 @@ import { playCircle, imageOutline } from 'ionicons/icons';
 })
 export class AppComponent {
   constructor() {
-    addIcons({ playCircle, imageOutline });
+    addIcons({ playCircle, imageOutline, logInOutline, powerOutline });
   }
 }

@@ -11,10 +11,15 @@ import {
   IonGrid,
   IonRow,
   IonCol,
+  IonButtons,
+  IonButton,
+  IonIcon,
 } from '@ionic/angular/standalone';
 import { Photo } from '../core/models/photo.model';
 import { PhotosService } from '../core/services/photos.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Observable, of } from 'rxjs';
+import { AuthService } from '../auth/auth.service';
 
 const importsList = [
   IonGrid,
@@ -26,6 +31,9 @@ const importsList = [
   IonToolbar,
   IonCard,
   IonImg,
+  IonButtons,
+  IonButton,
+  IonIcon,
   CommonModule,
   FormsModule,
 ];
@@ -40,12 +48,21 @@ const importsList = [
 export class GalleryPage implements OnInit {
   photos = signal<Photo[]>([]);
   destroyRef = inject(DestroyRef);
+  isUserAuthenticated: Observable<boolean> = of(false);
   // TODO: implement virtual scrolling here
 
-  constructor(private photosService: PhotosService) {}
+  constructor(
+    private photosService: PhotosService,
+    private authService: AuthService,
+  ) {}
 
   ngOnInit() {
     this.getPhotos();
+    this.isUserAuthenticated = this.authService.isUserAuthenticated;
+  }
+
+  logout() {
+    this.authService.logout();
   }
 
   getPhotos(): void {
