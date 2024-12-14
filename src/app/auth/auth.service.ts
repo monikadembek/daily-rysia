@@ -6,16 +6,19 @@ import {
   signInWithEmailAndPassword,
   UserCredential,
 } from '@angular/fire/auth';
+import { Firestore, addDoc, DocumentReference, collection, getDocs } from '@angular/fire/firestore';
 import { BehaviorSubject, Observable, map } from 'rxjs';
 import { Preferences } from '@capacitor/preferences';
 import { User } from '../core/models/user.model';
 import { USER_STORAGE_KEY } from '../core/constants';
+import { UserProfile } from 'firebase/auth';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
   auth: Auth = inject(Auth);
+  firestore = inject(Firestore);
 
   private _userSubject = new BehaviorSubject<User | null>(null);
   user$ = this._userSubject.asObservable();
@@ -41,11 +44,12 @@ export class AuthService {
     );
   }
 
-  async signUp(email: string, password: string): Promise<User> {
+  async signUp(username: string, email: string, password: string): Promise<User> {
     try {
       const userCredential = await createUserWithEmailAndPassword(this.auth, email, password);
       const tokenData: IdTokenResult = await userCredential.user.getIdTokenResult();
       const user = await this.storeUserData(email, userCredential, tokenData);
+      this.addUserProfile(username, email, userCredential);
       return user;
     } catch (error: any) {
       console.log('error: ', error);
@@ -93,7 +97,7 @@ export class AuthService {
     // console.log('user, ', userCredential);
     // console.log('idTokenResult: ', tokenData);
     const user: User = {
-      id: userCredential.user.uid,
+      userId: userCredential.user.uid,
       email: email,
       accessToken: tokenData.token,
       refreshToken: userCredential.user.refreshToken,
@@ -129,5 +133,34 @@ export class AuthService {
 
   private async clearUserFromStorage(): Promise<void> {
     await Preferences.remove({ key: USER_STORAGE_KEY });
+  }
+
+  addUserProfile(username: string, email: string, userCredential: UserCredential) {
+    const newUserProfile: Omit<UserProfile, 'id'> = {
+      userId: userCredential.user.uid,
+      username: username,
+      email: email,
+      avatarUrl: userCredential.user.photoURL,
+      joinedAt: userCredential.user.metadata.creationTime,
+    };
+
+    console.log('userProfile: ', newUserProfile);
+
+    const userProfilesCollection = collection(this.firestore, 'user-profiles');
+
+    addDoc(userProfilesCollection, newUserProfile)
+      .then((documentReference: DocumentReference) => {
+        // the documentReference provides access to the newly created document
+        console.log('user added to user-profiles collection, doc reference', documentReference);
+      })
+      .catch((error) => console.group(error));
+  }
+
+  async getUserProfiles() {
+    const userProfilesCollection = collection(this.firestore, 'user-profiles');
+    const querySnapshot = await getDocs(userProfilesCollection);
+    querySnapshot.forEach((doc) => {
+      console.log('user profiles docs: ', doc.id, doc.data());
+    });
   }
 }

@@ -1,6 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+  FormControl,
+} from '@angular/forms';
 import { Router } from '@angular/router';
 import {
   IonContent,
@@ -70,13 +76,25 @@ export class AuthPage implements OnInit {
 
   private createForm() {
     this.form = this.fb.group({
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(6)]],
+      email: ['', [Validators.required, Validators.email, Validators.maxLength(320)]],
+      password: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(256)]],
     });
   }
 
   toggleLoginState() {
     this.isLogin = !this.isLogin;
+    this.toggleUsernameField();
+  }
+
+  private toggleUsernameField(): void {
+    if (!this.isLogin) {
+      const usernameControl = new FormControl('', [
+        Validators.required,
+        Validators.minLength(2),
+        Validators.maxLength(256),
+      ]);
+      this.form.addControl('username', usernameControl);
+    }
   }
 
   private async presentAlert(errorMessage: string): Promise<void> {
@@ -97,7 +115,11 @@ export class AuthPage implements OnInit {
       if (this.isLogin) {
         user = await this.authService.login(this.form.value.email, this.form.value.password);
       } else {
-        user = await this.authService.signUp(this.form.value.email, this.form.value.password);
+        user = await this.authService.signUp(
+          this.form.value.username,
+          this.form.value.email,
+          this.form.value.password,
+        );
       }
 
       if (user) {

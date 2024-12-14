@@ -20,6 +20,30 @@
     <ion-row>
       <ion-col>
         <form [formGroup]="form" (ngSubmit)="onSubmit()">
+          @if(!isLogin) {
+          <ion-item>
+            <ion-input
+              type="text"
+              formControlName="username"
+              label="Username"
+              labelPlacement="stacked"
+            ></ion-input>
+          </ion-item>
+          @if (form.get('username')?.dirty && form.get('username')?.invalid &&
+          form.get('email')?.errors?.['required']) {
+          <ion-text class="input-error">Please provide username</ion-text>
+          } @if (form.get('username')?.dirty && form.get('username')?.invalid &&
+          form.get('email')?.errors?.['minlength']) {
+          <ion-text class="input-error"
+            >Please provide username that has minimum 2 characters</ion-text
+          >
+          } @if (form.get('username')?.dirty && form.get('username')?.invalid &&
+          form.get('email')?.errors?.['maxlength']) {
+          <ion-text class="input-error"
+            >Please provide username that is no longer than 256 characters</ion-text
+          >
+          } }
+
           <ion-item>
             <ion-input
               type="text"
@@ -34,6 +58,11 @@
           } @if (form.get('email')?.dirty && form.get('email')?.invalid &&
           form.get('email')?.errors?.['email']) {
           <ion-text class="input-error">Please provide valid email</ion-text>
+          } @if (form.get('email')?.dirty && form.get('email')?.invalid &&
+          form.get('email')?.errors?.['maxlength']) {
+          <ion-text class="input-error"
+            >Please provide email that is no longer than 320 characters</ion-text
+          >
           }
 
           <ion-item>
@@ -52,6 +81,9 @@
           } @if (form.get('password')?.dirty && form.get('password')?.invalid &&
           form.get('password')?.errors?.['minlength']) {
           <ion-text class="input-error"> Password must be minimum 6 characters long </ion-text>
+          } @if (form.get('password')?.dirty && form.get('password')?.invalid &&
+          form.get('password')?.errors?.['maxlength']) {
+          <ion-text class="input-error"> Password cannot be longer than 2566 characters</ion-text>
           }
           <div class="ion-margin">
             <ion-button type="submit" [disabled]="isRequestInProgress || form.invalid">
