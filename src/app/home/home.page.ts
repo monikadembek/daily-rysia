@@ -77,8 +77,8 @@ export class HomePage implements OnInit {
     this.getHomePagePhoto();
   }
 
-  logout() {
-    this.authService.logout();
+  async logout() {
+    await this.authService.logout();
   }
 
   getHomePagePhoto(): void {

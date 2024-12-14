@@ -62,8 +62,8 @@ export class GalleryPage implements OnInit {
     this.isUserAuthenticated = this.authService.isUserAuthenticated;
   }
 
-  logout() {
-    this.authService.logout();
+  async logout() {
+    await this.authService.logout();
   }
 
   getPhotos(): void {

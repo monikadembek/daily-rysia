@@ -7,7 +7,9 @@ import {
   UserCredential,
 } from '@angular/fire/auth';
 import { BehaviorSubject, Observable, map } from 'rxjs';
+import { Preferences } from '@capacitor/preferences';
 import { User } from '../core/models/user.model';
+import { USER_STORAGE_KEY } from '../core/constants';
 
 @Injectable({
   providedIn: 'root',
@@ -98,11 +100,34 @@ export class AuthService {
       expirationTime: tokenData.expirationTime,
     };
     this._userSubject.next(user);
+    await this.persistUser(user);
     console.log('emitted user', user);
     return user;
   }
 
-  logout() {
+  async autoLogin() {
+    const storageUser = await Preferences.get({ key: USER_STORAGE_KEY });
+    let user: User;
+    if (storageUser && storageUser.value) {
+      user = JSON.parse(storageUser.value);
+      console.log('user from storage: ', user);
+      this._userSubject.next(user);
+    }
+  }
+
+  async logout(): Promise<void> {
     this._userSubject.next(null);
+    await this.clearUserFromStorage();
+  }
+
+  private async persistUser(user: User): Promise<void> {
+    await Preferences.set({
+      key: USER_STORAGE_KEY,
+      value: JSON.stringify(user),
+    });
+  }
+
+  private async clearUserFromStorage(): Promise<void> {
+    await Preferences.remove({ key: USER_STORAGE_KEY });
   }
 }
