@@ -16,6 +16,12 @@ export const routes: Routes = [
         loadComponent: () => import('./gallery/gallery.page').then((m) => m.GalleryPage),
       },
       {
+        path: 'photos-manager',
+        loadComponent: () =>
+          import('./photos-manager/photos-manager.page').then((m) => m.PhotosManagerPage),
+        canActivate: [isAuthenticatedGuard, isAdminGuard],
+      },
+      {
         path: '',
         redirectTo: '/tabs/home',
         pathMatch: 'full',
