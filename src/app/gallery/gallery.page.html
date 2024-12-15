@@ -1,6 +1,20 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>Gallery</ion-title>
+    <div class="top-toolbar-title">
+      <ion-img src="./assets/logo.png" class="logo"></ion-img>
+      <ion-title> Gallery </ion-title>
+    </div>
+    <ion-buttons slot="primary">
+      @if((isUserAuthenticated$ | async) === true) {
+      <ion-button (click)="logout()">
+        <ion-icon slot="icon-only" name="power-outline"></ion-icon>
+      </ion-button>
+      } @else {
+      <ion-button routerLink="/auth">
+        <ion-icon slot="icon-only" name="log-in-outline"></ion-icon>
+      </ion-button>
+      }
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 

@@ -1,0 +1,97 @@
+<ion-header>
+  <ion-toolbar>
+    <div class="top-toolbar-title">
+      <ion-img src="./assets/logo.png" class="logo"></ion-img>
+      <ion-title>{{ isLogin ? 'Login' : 'Sign Up' }}</ion-title>
+    </div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-segment value="login" (ionChange)="toggleLoginState()">
+    <ion-segment-button value="login">
+      <ion-label>Login</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="signup">
+      <ion-label>Sign Up</ion-label>
+    </ion-segment-button>
+  </ion-segment>
+  <ion-grid>
+    <ion-row>
+      <ion-col>
+        <form [formGroup]="form" (ngSubmit)="onSubmit()">
+          @if(!isLogin) {
+          <ion-item>
+            <ion-input
+              type="text"
+              formControlName="username"
+              label="Username"
+              labelPlacement="stacked"
+            ></ion-input>
+          </ion-item>
+          @if (form.get('username')?.dirty && form.get('username')?.invalid &&
+          form.get('email')?.errors?.['required']) {
+          <ion-text class="input-error">Please provide username</ion-text>
+          } @if (form.get('username')?.dirty && form.get('username')?.invalid &&
+          form.get('email')?.errors?.['minlength']) {
+          <ion-text class="input-error"
+            >Please provide username that has minimum 2 characters</ion-text
+          >
+          } @if (form.get('username')?.dirty && form.get('username')?.invalid &&
+          form.get('email')?.errors?.['maxlength']) {
+          <ion-text class="input-error"
+            >Please provide username that is no longer than 256 characters</ion-text
+          >
+          } }
+
+          <ion-item>
+            <ion-input
+              type="text"
+              formControlName="email"
+              label="E-mail"
+              labelPlacement="stacked"
+            ></ion-input>
+          </ion-item>
+          @if (form.get('email')?.dirty && form.get('email')?.invalid &&
+          form.get('email')?.errors?.['required']) {
+          <ion-text class="input-error">Please provide email</ion-text>
+          } @if (form.get('email')?.dirty && form.get('email')?.invalid &&
+          form.get('email')?.errors?.['email']) {
+          <ion-text class="input-error">Please provide valid email</ion-text>
+          } @if (form.get('email')?.dirty && form.get('email')?.invalid &&
+          form.get('email')?.errors?.['maxlength']) {
+          <ion-text class="input-error"
+            >Please provide email that is no longer than 320 characters</ion-text
+          >
+          }
+
+          <ion-item>
+            <ion-input
+              type="password"
+              formControlName="password"
+              label="Password"
+              labelPlacement="floating"
+            >
+              <ion-input-password-toggle slot="end"></ion-input-password-toggle>
+            </ion-input>
+          </ion-item>
+          @if (form.get('password')?.dirty && form.get('password')?.invalid &&
+          form.get('password')?.errors?.['required']) {
+          <ion-text class="input-error">Please provide password</ion-text>
+          } @if (form.get('password')?.dirty && form.get('password')?.invalid &&
+          form.get('password')?.errors?.['minlength']) {
+          <ion-text class="input-error"> Password must be minimum 6 characters long </ion-text>
+          } @if (form.get('password')?.dirty && form.get('password')?.invalid &&
+          form.get('password')?.errors?.['maxlength']) {
+          <ion-text class="input-error"> Password cannot be longer than 2566 characters</ion-text>
+          }
+          <div class="ion-margin">
+            <ion-button type="submit" [disabled]="isRequestInProgress || form.invalid">
+              {{ isLogin ? 'Login' : 'Sign Up' }}
+            </ion-button>
+          </div>
+        </form>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>
