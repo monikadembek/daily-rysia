@@ -1,8 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit } from '@angular/core';
 import { IonApp, IonRouterOutlet } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { playCircle, imageOutline, logInOutline, powerOutline } from 'ionicons/icons';
 import { AuthService } from './auth/auth.service';
+import { from } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-root',
@@ -13,13 +15,12 @@ import { AuthService } from './auth/auth.service';
 export class AppComponent implements OnInit {
   constructor(private authService: AuthService) {
     addIcons({ playCircle, imageOutline, logInOutline, powerOutline });
+    from(this.retrieveUserFromStorage()).pipe(takeUntilDestroyed()).subscribe();
   }
 
-  ngOnInit(): void {
-    this.performAutoLogin();
-  }
+  ngOnInit(): void {}
 
-  private async performAutoLogin() {
-    await this.authService.autoLogin();
+  private async retrieveUserFromStorage() {
+    await this.authService.retrieveUserFromStorage();
   }
 }

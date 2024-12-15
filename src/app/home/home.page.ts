@@ -60,7 +60,7 @@ const importsList = [
 export class HomePage implements OnInit {
   photo = signal<Photo | null>(null);
   destroyRef = inject(DestroyRef);
-  isUserAuthenticated: Observable<boolean> = of(false);
+  isUserAuthenticated$: Observable<boolean> = of(false);
 
   photos$: Observable<Partial<Photo[]>> = of([]);
   photosCollection!: CollectionReference;
@@ -73,7 +73,7 @@ export class HomePage implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.isUserAuthenticated = this.authService.isUserAuthenticated;
+    this.isUserAuthenticated$ = this.authService.isUserAuthenticated$;
     this.getHomePagePhoto();
   }
 

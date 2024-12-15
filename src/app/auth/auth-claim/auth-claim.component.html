@@ -1,0 +1,42 @@
+<ion-header>
+  <ion-toolbar>
+    <div class="top-toolbar-title">
+      <ion-img src="./assets/logo.png" class="logo"></ion-img>
+      <ion-title>Set Admin Permissions</ion-title>
+    </div>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <div>
+    <h5 class="ion-margin">Asign admin permissions to user</h5>
+    <form #form="ngForm" (ngSubmit)="onSubmit(form)">
+      <ion-item>
+        <ion-input
+          id="userId"
+          name="userId"
+          type="text"
+          label="User Id"
+          labelPlacement="stacked"
+          placeholder="Provide user id"
+          [(ngModel)]="userId"
+          required
+        ></ion-input>
+      </ion-item>
+      <div class="ion-margin">
+        <ion-button type="submit" [disabled]="form.value.userId?.length === 0"
+          >Set Admin</ion-button
+        >
+      </div>
+    </form>
+
+    @if (message) {
+      <div class="ion-margin">
+        <p>{{ message }}</p>
+      </div>
+    }
+  </div>
+
+  <div class="ion-margin">
+    <ion-button (click)="goToHomepage()">Return to Home Page</ion-button>
+  </div>
+</ion-content>

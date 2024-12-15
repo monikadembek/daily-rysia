@@ -4,4 +4,5 @@ export interface User {
   accessToken: string;
   refreshToken: string;
   expirationTime: string;
+  isAdmin: boolean;
 }

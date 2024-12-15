@@ -18,16 +18,14 @@ import { UserProfile } from 'firebase/auth';
 })
 export class AuthService {
   auth: Auth = inject(Auth);
-  firestore = inject(Firestore);
+  firestore: Firestore = inject(Firestore);
 
   private _userSubject = new BehaviorSubject<User | null>(null);
   user$ = this._userSubject.asObservable();
 
   constructor() {}
 
-  // TODO: store data in firebase users collection
-
-  get isUserAuthenticated(): Observable<boolean> {
+  get isUserAuthenticated$(): Observable<boolean> {
     return this.user$.pipe(
       map((user: User | null) => {
         if (!user || !user.accessToken) {
@@ -42,6 +40,13 @@ export class AuthService {
         return isTokenValid;
       }),
     );
+  }
+
+  get isAdmin(): boolean {
+    if (!this._userSubject.getValue()) {
+      return false;
+    }
+    return this._userSubject.getValue()!.isAdmin;
   }
 
   async signUp(username: string, email: string, password: string): Promise<User> {
@@ -102,6 +107,7 @@ export class AuthService {
       accessToken: tokenData.token,
       refreshToken: userCredential.user.refreshToken,
       expirationTime: tokenData.expirationTime,
+      isAdmin: (tokenData.claims?.['admin'] as boolean) || false,
     };
     this._userSubject.next(user);
     await this.persistUser(user);
@@ -109,7 +115,7 @@ export class AuthService {
     return user;
   }
 
-  async autoLogin() {
+  async retrieveUserFromStorage() {
     const storageUser = await Preferences.get({ key: USER_STORAGE_KEY });
     let user: User;
     if (storageUser && storageUser.value) {

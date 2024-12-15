@@ -107,7 +107,6 @@ export class AuthPage implements OnInit {
   }
 
   async onSubmit() {
-    console.log(this.form);
     try {
       this.isRequestInProgress = true;
       let user: User;

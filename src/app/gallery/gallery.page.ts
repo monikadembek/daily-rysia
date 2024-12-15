@@ -52,7 +52,7 @@ const importsList = [
 export class GalleryPage implements OnInit {
   photos = signal<Photo[]>([]);
   destroyRef = inject(DestroyRef);
-  isUserAuthenticated: Observable<boolean> = of(false);
+  isUserAuthenticated$: Observable<boolean> = of(false);
   // TODO: implement virtual scrolling here
 
   constructor(
@@ -64,7 +64,7 @@ export class GalleryPage implements OnInit {
 
   ngOnInit() {
     this.getPhotos();
-    this.isUserAuthenticated = this.authService.isUserAuthenticated;
+    this.isUserAuthenticated$ = this.authService.isUserAuthenticated$;
   }
 
   async logout() {

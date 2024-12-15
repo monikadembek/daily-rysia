@@ -5,7 +5,7 @@
       <ion-title> Gallery </ion-title>
     </div>
     <ion-buttons slot="primary">
-      @if((isUserAuthenticated | async) === true) {
+      @if((isUserAuthenticated$ | async) === true) {
       <ion-button (click)="logout()">
         <ion-icon slot="icon-only" name="power-outline"></ion-icon>
       </ion-button>
