@@ -1,0 +1,30 @@
+<div class="ion-margin">
+  <h3>Add photo</h3>
+</div>
+<ion-grid>
+  <form [formGroup]="form" (ngSubmit)="submitForm()">
+    <ion-row>
+      <ion-col>
+        <ion-item>
+          <ion-input
+            formControlName="caption"
+            type="text"
+            label="Caption"
+            labelPlacement="floating"
+          ></ion-input>
+        </ion-item>
+        <div class="ion-margin">
+          <app-image-picker
+            [showPreview]="showPreview"
+            (imagePicked)="onImagePicked($event)"
+          ></app-image-picker>
+        </div>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <ion-button type="submit" [disabled]="form.invalid">Submit photo</ion-button>
+      </ion-col>
+    </ion-row>
+  </form>
+</ion-grid>

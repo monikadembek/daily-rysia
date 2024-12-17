@@ -1,0 +1,29 @@
+<ion-header>
+  <ion-toolbar>
+    <div class="top-toolbar-title">
+      <ion-img src="./assets/logo.png" class="logo"></ion-img>
+      <ion-title> Daily Rysia - Photo Manager </ion-title>
+    </div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-segment value="add">
+    <ion-segment-button value="add" content-id="add">
+      <ion-label>Add new photo</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="manage" content-id="manage">
+      <ion-label>Manage photos</ion-label>
+    </ion-segment-button>
+  </ion-segment>
+  <ion-segment-view>
+    <ion-segment-content id="add">
+      <app-add-photo></app-add-photo>
+    </ion-segment-content>
+    <ion-segment-content id="manage">
+      <div class="ion-margin">
+        <p>Manage photos functionality coming soon</p>
+      </div>
+    </ion-segment-content>
+  </ion-segment-view>
+</ion-content>

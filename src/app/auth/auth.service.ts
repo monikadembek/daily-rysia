@@ -49,6 +49,17 @@ export class AuthService {
     return this._userSubject.getValue()!.isAdmin;
   }
 
+  get isAdmin$(): Observable<boolean> {
+    return this.user$.pipe(
+      map((user: User | null) => {
+        if (!user) {
+          return false;
+        }
+        return user.isAdmin;
+      }),
+    );
+  }
+
   async signUp(username: string, email: string, password: string): Promise<User> {
     try {
       const userCredential = await createUserWithEmailAndPassword(this.auth, email, password);
