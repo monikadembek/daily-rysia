@@ -6,6 +6,7 @@ import {
   PreloadAllModules,
 } from '@angular/router';
 import { IonicRouteStrategy, provideIonicAngular } from '@ionic/angular/standalone';
+import { defineCustomElements } from '@ionic/pwa-elements/loader';
 
 import { provideFirebaseApp, initializeApp } from '@angular/fire/app';
 import { provideAuth, getAuth } from '@angular/fire/auth';
@@ -15,6 +16,9 @@ import { provideFunctions, getFunctions } from '@angular/fire/functions';
 import { routes } from './app/app.routes';
 import { AppComponent } from './app/app.component';
 import { environment } from './environments/environment';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
+
+defineCustomElements(window);
 
 bootstrapApplication(AppComponent, {
   providers: [
@@ -25,5 +29,6 @@ bootstrapApplication(AppComponent, {
     provideAuth(() => getAuth()),
     provideFirestore(() => getFirestore()),
     provideFunctions(() => getFunctions()),
+    provideHttpClient(withInterceptors([])),
   ],
 });

@@ -7,6 +7,7 @@ import {
   logInOutline,
   powerOutline,
   cameraOutline,
+  camera,
 } from 'ionicons/icons';
 import { AuthService } from './auth/auth.service';
 import { from } from 'rxjs';
@@ -20,7 +21,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 })
 export class AppComponent implements OnInit {
   constructor(private authService: AuthService) {
-    addIcons({ playCircle, imageOutline, logInOutline, powerOutline, cameraOutline });
+    addIcons({ playCircle, imageOutline, logInOutline, powerOutline, cameraOutline, camera });
     from(this.retrieveUserFromStorage()).pipe(takeUntilDestroyed()).subscribe();
   }
 

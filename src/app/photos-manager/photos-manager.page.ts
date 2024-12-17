@@ -1,6 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule } from '@angular/forms';
 import {
   IonContent,
   IonHeader,
@@ -32,8 +30,6 @@ import { AddPhotoComponent } from './add-photo/add-photo.component';
     IonSegmentView,
     IonSegmentContent,
     AddPhotoComponent,
-    CommonModule,
-    ReactiveFormsModule,
   ],
 })
 export class PhotosManagerPage implements OnInit {
