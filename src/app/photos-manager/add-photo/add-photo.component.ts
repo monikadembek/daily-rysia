@@ -10,6 +10,7 @@ import {
   IonButton,
   AlertController,
   IonLoading,
+  IonToast,
 } from '@ionic/angular/standalone';
 import { ImagePickerComponent } from '../image-picker/image-picker.component';
 import { UtilsService } from '../services/utils.service';
@@ -23,6 +24,7 @@ import { DocumentReference } from '@angular/fire/firestore';
   styleUrls: ['./add-photo.component.scss'],
   standalone: true,
   imports: [
+    IonToast,
     IonLoading,
     CommonModule,
     ReactiveFormsModule,
@@ -43,6 +45,8 @@ export class AddPhotoComponent implements OnInit {
   imageFile: File | null = null;
   showPreview = true;
   isUploading = false;
+  message = '';
+  isToastOpen = false;
 
   constructor(
     private fb: FormBuilder,
@@ -52,6 +56,10 @@ export class AddPhotoComponent implements OnInit {
   ) {}
 
   ngOnInit() {}
+
+  setToastOpen(isOpen: boolean) {
+    this.isToastOpen = isOpen;
+  }
 
   onImagePicked(imageData: string | File) {
     console.log(imageData);
@@ -71,6 +79,7 @@ export class AddPhotoComponent implements OnInit {
     }
     console.log(this.form);
     this.isUploading = true;
+    this.message = '';
     this.photoManagerService
       .uploadImageToCloudinary(this.imageFile!)
       .pipe(
@@ -102,6 +111,8 @@ export class AddPhotoComponent implements OnInit {
           doc.parent,
         );
         if (doc) {
+          this.message = 'The image has been successfully uploaded';
+          this.setToastOpen(true);
           this.form.reset();
           this.imageFile = null;
           this.showPreview = false;

@@ -29,4 +29,11 @@
   </form>
 </ion-grid>
 
+<ion-toast
+  [isOpen]="isToastOpen"
+  [message]="message"
+  [duration]="5000"
+  (didDismiss)="setToastOpen(false)"
+></ion-toast>
+
 <ion-loading message="Uploading photo..." [isOpen]="isUploading"></ion-loading>
