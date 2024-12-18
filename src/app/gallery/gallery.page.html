@@ -2,7 +2,7 @@
   <ion-toolbar>
     <div class="top-toolbar-title">
       <ion-img src="./assets/logo.png" class="logo"></ion-img>
-      <ion-title> Daily Rysia </ion-title>
+      <ion-title> Gallery </ion-title>
     </div>
     <ion-buttons slot="primary">
       @if((isUserAuthenticated$ | async) === true) {
@@ -21,14 +21,16 @@
 <ion-content>
   <ion-grid>
     <ion-row>
-      <ion-col size-sm="8" offset-sm="2" size-md="6" offset-md="3" class="ion-no-padding">
-        <ion-card class="ion-text-center">
-          <ion-img [src]="photo()?.photoUrl" alt="todays photo of Rysia"></ion-img>
-          <ion-card-header>
-            <ion-card-subtitle>{{ photo()?.createdAt | date }}</ion-card-subtitle>
-            <ion-card-title>{{ photo()?.caption }}</ion-card-title>
-          </ion-card-header>
-        </ion-card>
+      <ion-col size="12" size-sm="10" offset-sm="1" size-md="8" offset-md="2">
+        <div class="gallery">
+          @for(photo of photos(); track photo.id) {
+          <ion-card class="card">
+            <ion-img [src]="photo.photoUrl" class="photo"></ion-img>
+          </ion-card>
+          } @empty {
+          <p>There are currently no photos in the gallery</p>
+          }
+        </div>
       </ion-col>
     </ion-row>
   </ion-grid>

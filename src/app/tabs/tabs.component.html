@@ -1,0 +1,18 @@
+<ion-tabs>
+  <ion-tab-bar slot="bottom">
+    <ion-tab-button tab="home">
+      <ion-icon name="play-circle"></ion-icon>
+      Home
+    </ion-tab-button>
+    <ion-tab-button tab="gallery">
+      <ion-icon name="image-outline"></ion-icon>
+      Gallery
+    </ion-tab-button>
+    @if (isAdmin$ | async) {
+      <ion-tab-button tab="photos-manager">
+        <ion-icon name="camera-outline"></ion-icon>
+        Manage photos
+      </ion-tab-button>
+    }
+  </ion-tab-bar>
+</ion-tabs>

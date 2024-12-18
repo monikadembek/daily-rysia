@@ -1,69 +1,59 @@
-import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
-import { DatePipe, AsyncPipe } from '@angular/common';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Component, OnInit, signal, inject, DestroyRef } from '@angular/core';
+import { CommonModule, AsyncPipe } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import {
-  IonHeader,
-  IonToolbar,
-  IonTitle,
   IonContent,
-  IonCol,
-  IonGrid,
-  IonRow,
+  IonHeader,
+  IonTitle,
+  IonToolbar,
   IonImg,
   IonCard,
-  IonCardSubtitle,
-  IonCardHeader,
-  IonCardTitle,
-  IonIcon,
+  IonGrid,
+  IonRow,
+  IonCol,
   IonButtons,
   IonButton,
+  IonIcon,
   AlertController,
 } from '@ionic/angular/standalone';
-import { PhotosService } from '../core/services/photos.service';
 import { Photo } from '../core/models/photo.model';
-import { map, Observable, of } from 'rxjs';
-import { CollectionReference } from '@angular/fire/firestore';
-import { Router, RouterLink } from '@angular/router';
+import { PhotosService } from '../core/services/photos.service';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Observable, of } from 'rxjs';
 import { AuthService } from '../auth/auth.service';
+import { Router, RouterLink } from '@angular/router';
 
 const importsList = [
-  IonCardSubtitle,
-  IonCard,
-  IonImg,
-  IonCol,
-  IonHeader,
-  IonToolbar,
-  IonTitle,
-  IonContent,
   IonGrid,
   IonRow,
   IonCol,
-  DatePipe,
-  AsyncPipe,
+  IonContent,
+  IonHeader,
+  IonTitle,
+  IonToolbar,
   IonCard,
-  IonCardHeader,
-  IonCardTitle,
-  IonCardSubtitle,
-  IonIcon,
+  IonImg,
   IonButtons,
   IonButton,
+  IonIcon,
+  CommonModule,
+  FormsModule,
+  AsyncPipe,
   RouterLink,
 ];
 
 @Component({
-  selector: 'app-home',
-  templateUrl: 'home.page.html',
-  styleUrls: ['home.page.scss'],
+  selector: 'app-gallery',
+  templateUrl: './gallery.page.html',
+  styleUrls: ['./gallery.page.scss'],
   standalone: true,
   imports: importsList,
 })
-export class HomePage implements OnInit {
-  photo = signal<Photo | null>(null);
+export class GalleryPage implements OnInit {
+  photos = signal<Photo[]>([]);
   destroyRef = inject(DestroyRef);
   isUserAuthenticated$: Observable<boolean> = of(false);
-
-  photos$: Observable<Partial<Photo[]>> = of([]);
-  photosCollection!: CollectionReference;
+  // TODO: implement virtual scrolling here
 
   constructor(
     private photosService: PhotosService,
@@ -72,9 +62,9 @@ export class HomePage implements OnInit {
     private router: Router,
   ) {}
 
-  ngOnInit(): void {
+  ngOnInit() {
+    this.getPhotos();
     this.isUserAuthenticated$ = this.authService.isUserAuthenticated$;
-    this.getHomePagePhoto();
   }
 
   async logout() {
@@ -99,14 +89,11 @@ export class HomePage implements OnInit {
     await alert.present();
   }
 
-  getHomePagePhoto(): void {
+  getPhotos(): void {
     this.photosService.photos$
-      .pipe(
-        takeUntilDestroyed(this.destroyRef),
-        map((photos) => photos[0]),
-      )
-      .subscribe((photo: Photo) => {
-        this.photo.set(photo);
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((photos: Photo[]) => {
+        this.photos.set(photos);
       });
   }
 }

@@ -1,0 +1,18 @@
+@if (selectedImage && showPreview) {
+  <ion-img [src]="selectedImage"></ion-img>
+}
+
+<ion-button (click)="useCamera()">
+  <ion-icon name="camera" slot="start"></ion-icon>
+  <ion-label>Take photo</ion-label>
+</ion-button>
+
+@if (showSelectFileBtn) {
+  <input
+    type="file"
+    accept="image/jpeg,image/jpg"
+    #filePicker
+    (change)="selectFile($event)"
+    style="display: none"
+  />
+}
