@@ -21,7 +21,18 @@ import { Capacitor } from '@capacitor/core';
 export class ImagePickerComponent implements OnInit {
   @ViewChild('filePicker') filePickerRef!: ElementRef;
   @Output() imagePicked = new EventEmitter<string | File>();
-  @Input() showPreview = true;
+
+  _clearPreview = false;
+  get clearPreview(): boolean {
+    return this._clearPreview;
+  }
+  @Input() set clearPreview(value) {
+    console.log('in setter');
+    this._clearPreview = value;
+    if (value) {
+      this.resetFileInput();
+    }
+  }
 
   selectedImage: string | File = '';
   showSelectFileBtn = false;
@@ -39,6 +50,13 @@ export class ImagePickerComponent implements OnInit {
       this.platform.is('desktop')
     ) {
       this.showSelectFileBtn = true;
+    }
+  }
+
+  private resetFileInput(): void {
+    if (this.filePickerRef) {
+      console.log('reset filepicker');
+      this.filePickerRef.nativeElement.value = '';
     }
   }
 
@@ -62,6 +80,7 @@ export class ImagePickerComponent implements OnInit {
 
       if (image) {
         this.selectedImage = image.base64String as string;
+        this.clearPreview = false;
         this.imagePicked.emit(this.selectedImage); // emit base64 to parent
       }
     } catch (error) {
@@ -83,6 +102,7 @@ export class ImagePickerComponent implements OnInit {
       const dataUrl = fileReader.result?.toString(); // base64 url
       if (dataUrl) {
         this.selectedImage = dataUrl; // show base64 in ion-img
+        this.clearPreview = false;
         this.imagePicked.emit(file); // emit file to parent
       }
     };

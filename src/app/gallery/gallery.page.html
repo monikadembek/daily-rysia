@@ -26,6 +26,12 @@
           @for(photo of photos(); track photo.id) {
           <ion-card class="card">
             <ion-img [src]="photo.photoUrl" class="photo"></ion-img>
+            <ion-card-header>
+              <ion-card-subtitle>{{ photo?.createdAt | date }}</ion-card-subtitle>
+            </ion-card-header>
+            <ion-card-content>
+              <p>{{ photo?.caption }}</p>
+            </ion-card-content>
           </ion-card>
           } @empty {
           <p>There are currently no photos in the gallery</p>

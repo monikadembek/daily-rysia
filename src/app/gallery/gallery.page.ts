@@ -8,6 +8,9 @@ import {
   IonToolbar,
   IonImg,
   IonCard,
+  IonCardHeader,
+  IonCardSubtitle,
+  IonCardContent,
   IonGrid,
   IonRow,
   IonCol,
@@ -15,6 +18,7 @@ import {
   IonButton,
   IonIcon,
   AlertController,
+  ViewWillEnter,
 } from '@ionic/angular/standalone';
 import { Photo } from '../core/models/photo.model';
 import { PhotosService } from '../core/services/photos.service';
@@ -32,6 +36,9 @@ const importsList = [
   IonTitle,
   IonToolbar,
   IonCard,
+  IonCardHeader,
+  IonCardSubtitle,
+  IonCardContent,
   IonImg,
   IonButtons,
   IonButton,
@@ -49,7 +56,7 @@ const importsList = [
   standalone: true,
   imports: importsList,
 })
-export class GalleryPage implements OnInit {
+export class GalleryPage implements OnInit, ViewWillEnter {
   photos = signal<Photo[]>([]);
   destroyRef = inject(DestroyRef);
   isUserAuthenticated$: Observable<boolean> = of(false);
@@ -63,8 +70,11 @@ export class GalleryPage implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.getPhotos();
     this.isUserAuthenticated$ = this.authService.isUserAuthenticated$;
+  }
+
+  ionViewWillEnter(): void {
+    this.getPhotos();
   }
 
   async logout() {
@@ -90,9 +100,17 @@ export class GalleryPage implements OnInit {
   }
 
   getPhotos(): void {
+    this.photosService
+      .getPhotos()
+      .then((photos) => {
+        console.log('photos from firestore: ', photos);
+      })
+      .catch((error) => console.log(error));
+
     this.photosService.photos$
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((photos: Photo[]) => {
+        console.log('photos from subject');
         this.photos.set(photos);
       });
   }
