@@ -48,14 +48,6 @@ export class PhotoManagerService {
     return from(addDoc(photosCollection, newPhoto));
   }
 
-  async getPhotos(): Promise<void> {
-    const photosCollection = collection(this.firestore, 'photos');
-    const querySnapshot = await getDocs(photosCollection);
-    querySnapshot.forEach((doc) => {
-      console.log('user profiles docs: ', doc.id, doc.data());
-    });
-  }
-
   // TODO: uploadImage cloud function needs some fix, it uploads file to storage but doesn't show file
   uploadImageCloudFunction(
     fileName: string,

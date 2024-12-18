@@ -1,6 +1,15 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Photo } from '../models/photo.model';
-import { BehaviorSubject, Observable, map } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
+import {
+  collection,
+  Firestore,
+  getDocs,
+  limit,
+  orderBy,
+  query,
+  Timestamp,
+} from '@angular/fire/firestore';
 
 @Injectable({
   providedIn: 'root',
@@ -8,6 +17,8 @@ import { BehaviorSubject, Observable, map } from 'rxjs';
 export class PhotosService {
   private _photos = new BehaviorSubject<Photo[]>([]);
   photos$: Observable<Photo[]> = this._photos.asObservable();
+
+  firestore = inject(Firestore);
 
   private samplePhotos: Photo[] = [
     {
@@ -52,7 +63,47 @@ export class PhotosService {
     return this._photos.value;
   }
 
-  constructor() {
-    this._photos.next(this.samplePhotos);
+  constructor() {}
+
+  async getPhotos(): Promise<Photo[]> {
+    const photos: Photo[] = [];
+
+    const photosCollection = collection(this.firestore, 'photos');
+    const querySnapshot = await getDocs(photosCollection);
+
+    querySnapshot.forEach((doc) => {
+      // console.log('user profiles docs: ', doc.id, doc.data());
+      const docData = doc.data() as Omit<Photo, 'id'>;
+      const photo = {
+        id: doc.id,
+        photoUrl: docData.photoUrl,
+        caption: docData.caption,
+        likesCount: docData.likesCount,
+        commentsCount: docData.commentsCount,
+        createdAt: (docData.createdAt as unknown as Timestamp).toDate(),
+      };
+      photos.push(photo);
+    });
+
+    this._photos.next(photos);
+    return photos;
+  }
+
+  async getMostRecentPhoto(): Promise<Photo> {
+    const photosCollection = collection(this.firestore, 'photos');
+    const lastDocQuery = query(photosCollection, orderBy('createdAt', 'desc'), limit(1));
+
+    const snapshot = await getDocs(lastDocQuery);
+    const docData = snapshot.docs[0]?.data() as Omit<Photo, 'id'>;
+
+    const recentPhoto = {
+      id: snapshot.docs[0]?.id,
+      photoUrl: docData.photoUrl,
+      caption: docData.caption,
+      likesCount: docData.likesCount,
+      commentsCount: docData.commentsCount,
+      createdAt: (docData.createdAt as unknown as Timestamp).toDate(),
+    };
+    return recentPhoto;
   }
 }

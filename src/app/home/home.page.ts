@@ -1,6 +1,5 @@
-import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { DatePipe, AsyncPipe } from '@angular/common';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   IonHeader,
   IonToolbar,
@@ -18,10 +17,11 @@ import {
   IonButtons,
   IonButton,
   AlertController,
+  ViewWillEnter,
 } from '@ionic/angular/standalone';
 import { PhotosService } from '../core/services/photos.service';
 import { Photo } from '../core/models/photo.model';
-import { map, Observable, of } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { CollectionReference } from '@angular/fire/firestore';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../auth/auth.service';
@@ -57,9 +57,8 @@ const importsList = [
   standalone: true,
   imports: importsList,
 })
-export class HomePage implements OnInit {
+export class HomePage implements OnInit, ViewWillEnter {
   photo = signal<Photo | null>(null);
-  destroyRef = inject(DestroyRef);
   isUserAuthenticated$: Observable<boolean> = of(false);
 
   photos$: Observable<Partial<Photo[]>> = of([]);
@@ -74,6 +73,9 @@ export class HomePage implements OnInit {
 
   ngOnInit(): void {
     this.isUserAuthenticated$ = this.authService.isUserAuthenticated$;
+  }
+
+  ionViewWillEnter(): void {
     this.getHomePagePhoto();
   }
 
@@ -100,13 +102,13 @@ export class HomePage implements OnInit {
   }
 
   getHomePagePhoto(): void {
-    this.photosService.photos$
-      .pipe(
-        takeUntilDestroyed(this.destroyRef),
-        map((photos) => photos[0]),
-      )
-      .subscribe((photo: Photo) => {
+    console.log('get homepage photo');
+    this.photosService
+      .getMostRecentPhoto()
+      .then((photo) => {
+        console.log('homepage photo: ', photo);
         this.photo.set(photo);
-      });
+      })
+      .catch((error) => console.log('error getting most recent photo', error));
   }
 }

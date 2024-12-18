@@ -22,6 +22,7 @@
   <ion-grid>
     <ion-row>
       <ion-col size-sm="8" offset-sm="2" size-md="6" offset-md="3" class="ion-no-padding">
+        @if (photo()) {
         <ion-card class="ion-text-center">
           <ion-img [src]="photo()?.photoUrl" alt="todays photo of Rysia"></ion-img>
           <ion-card-header>
@@ -29,6 +30,10 @@
             <ion-card-title>{{ photo()?.caption }}</ion-card-title>
           </ion-card-header>
         </ion-card>
+        } @else {
+        <p class="ion-margin">There are currently no photos of Rysia to display.</p>
+        <p class="ion-margin">Please come back later.</p>
+        }
       </ion-col>
     </ion-row>
   </ion-grid>
