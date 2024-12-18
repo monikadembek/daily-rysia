@@ -69,7 +69,8 @@ export class PhotosService {
     const photos: Photo[] = [];
 
     const photosCollection = collection(this.firestore, 'photos');
-    const querySnapshot = await getDocs(photosCollection);
+    const photosQuery = query(photosCollection, orderBy('createdAt', 'desc'));
+    const querySnapshot = await getDocs(photosQuery);
 
     querySnapshot.forEach((doc) => {
       // console.log('user profiles docs: ', doc.id, doc.data());
