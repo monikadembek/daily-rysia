@@ -43,7 +43,7 @@ export class AddPhotoComponent implements OnInit {
     photoFile: ['', [Validators.required]],
   });
   imageFile: File | null = null;
-  showPreview = true;
+  clearPreview = false;
   isUploading = false;
   message = '';
   isToastOpen = false;
@@ -120,7 +120,7 @@ export class AddPhotoComponent implements OnInit {
           this.setToastOpen(true);
           this.form.reset();
           this.imageFile = null;
-          this.showPreview = false;
+          this.clearPreview = true;
           this.isUploading = false;
         }
       });
