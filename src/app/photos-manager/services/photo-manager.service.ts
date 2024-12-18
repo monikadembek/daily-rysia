@@ -3,8 +3,9 @@ import { Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { from, Observable } from 'rxjs';
 import { Firestore, addDoc, collection, getDocs } from '@angular/fire/firestore';
-import { Photo } from 'src/app/core/models/photo.model';
+import { Photo } from '../../core/models/photo.model';
 import { Functions, httpsCallable } from '@angular/fire/functions';
+import { UPLOAD_FOLDER_NAME } from '../../core/constants';
 
 export interface CloudinaryUploadResponse {
   imagePublicId: string;
@@ -29,7 +30,7 @@ export class PhotoManagerService {
     formData.append('file', file);
 
     return this.http.post<CloudinaryUploadResponse>(
-      `${this.baseUrl}/files/cloudinary-image-upload`,
+      `${this.baseUrl}/files/cloudinary-image-upload?folder=${UPLOAD_FOLDER_NAME}`,
       formData,
     );
   }
@@ -72,5 +73,10 @@ export class PhotoManagerService {
         console.log('Upload URL:', result.data.url);
       })
       .catch((error) => console.error(error));
+  }
+
+  addOptimizationParameterToImageUrl(url: string): string {
+    const newUrl = url.replace('upload/', 'upload/q_auto/');
+    return newUrl;
   }
 }

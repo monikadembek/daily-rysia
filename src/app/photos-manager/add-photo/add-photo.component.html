@@ -1,10 +1,14 @@
-<div class="ion-margin">
-  <h3>Add photo</h3>
-</div>
 <ion-grid>
+  <ion-row>
+    <ion-col size-sm="8" offset-sm="2" size-md="6" offset-md="3">
+      <div class="ion-margin">
+        <h3>Add photo</h3>
+      </div>
+    </ion-col>
+  </ion-row>
   <form [formGroup]="form" (ngSubmit)="submitForm()">
     <ion-row>
-      <ion-col>
+      <ion-col size-sm="8" offset-sm="2" size-md="6" offset-md="3">
         <ion-item>
           <ion-input
             formControlName="caption"
@@ -22,9 +26,20 @@
       </ion-col>
     </ion-row>
     <ion-row>
-      <ion-col>
-        <ion-button type="submit" [disabled]="form.invalid">Submit photo</ion-button>
+      <ion-col size-sm="8" offset-sm="2" size-md="6" offset-md="3">
+        <div class="ion-margin">
+          <ion-button type="submit" [disabled]="form.invalid">Submit photo</ion-button>
+        </div>
       </ion-col>
     </ion-row>
   </form>
 </ion-grid>
+
+<ion-toast
+  [isOpen]="isToastOpen"
+  [message]="message"
+  [duration]="5000"
+  (didDismiss)="setToastOpen(false)"
+></ion-toast>
+
+<ion-loading message="Uploading photo..." [isOpen]="isUploading"></ion-loading>
