@@ -91,7 +91,12 @@ export class AddPhotoComponent implements OnInit {
         }),
         switchMap((res: CloudinaryUploadResponse) => {
           console.log('upload image res: ', res);
-          return this.photoManagerService.storePhotoInFirestore(this.form.value.caption, res.url);
+          const urlWithQualityOptimization =
+            this.photoManagerService.addOptimizationParameterToImageUrl(res.url);
+          return this.photoManagerService.storePhotoInFirestore(
+            this.form.value.caption,
+            urlWithQualityOptimization,
+          );
         }),
         catchError((error: any) => {
           console.log('error storing data in firebase: ', error);

@@ -73,4 +73,9 @@ export class PhotoManagerService {
       })
       .catch((error) => console.error(error));
   }
+
+  addOptimizationParameterToImageUrl(url: string): string {
+    const newUrl = url.replace('upload/', 'upload/q_auto/');
+    return newUrl;
+  }
 }
