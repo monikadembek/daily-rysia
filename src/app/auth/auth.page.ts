@@ -108,10 +108,9 @@ export class AuthPage implements OnInit {
 
   async onSubmit() {
     try {
-      this.isRequestInProgress = true;
       let user: User;
-
       if (this.isLogin) {
+        this.isRequestInProgress = true;
         user = await this.authService.login(this.form.value.email, this.form.value.password);
       } else {
         user = await this.authService.signUp(

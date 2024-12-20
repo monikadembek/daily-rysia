@@ -29,6 +29,11 @@
                 "glob": "**/*",
                 "input": "src/assets",
                 "output": "assets"
+              },
+              {
+                "glob": "firebase-messaging-sw.js",
+                "input": "src",
+                "output": "/"
               }
             ],
             "styles": ["src/global.scss", "src/theme/variables.scss"],
@@ -72,6 +77,11 @@
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "headers": {
+              "Service-Worker-Allowed": "/"
+            }
+          },
           "configurations": {
             "production": {
               "buildTarget": "app:build:production"
