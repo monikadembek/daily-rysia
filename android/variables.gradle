@@ -14,5 +14,6 @@ ext {
     androidxEspressoCoreVersion = '3.5.1'
     cordovaAndroidVersion = '10.1.1'
     androidxExifInterfaceVersion = '1.3.6'
-    androidxMaterialVersion: '1.10.0'
+    androidxMaterialVersion = '1.10.0'
+    firebaseMessagingVersion = '23.3.1'
 }

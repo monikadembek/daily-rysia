@@ -24,7 +24,7 @@
       <ion-col size-sm="8" offset-sm="2" size-md="6" offset-md="3" class="ion-no-padding">
         @if (photo()) {
         <ion-card class="ion-text-center">
-          <ion-img [src]="photo()?.photoUrl" alt="todays photo of Rysia"></ion-img>
+          <ion-img [src]="photo()?.photoUrl" alt="most recent photo of Rysia"></ion-img>
           <ion-card-header>
             <ion-card-subtitle>{{ photo()?.createdAt | date }}</ion-card-subtitle>
             <ion-card-title>{{ photo()?.caption }}</ion-card-title>
