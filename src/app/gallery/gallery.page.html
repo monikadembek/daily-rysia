@@ -1,21 +1,9 @@
 <ion-header>
-  <ion-toolbar>
-    <div class="top-toolbar-title">
-      <ion-img src="./assets/logo.png" class="logo"></ion-img>
-      <ion-title> Gallery </ion-title>
-    </div>
-    <ion-buttons slot="primary">
-      @if((isUserAuthenticated$ | async) === true) {
-      <ion-button (click)="logout()">
-        <ion-icon slot="icon-only" name="power-outline"></ion-icon>
-      </ion-button>
-      } @else {
-      <ion-button routerLink="/auth">
-        <ion-icon slot="icon-only" name="log-in-outline"></ion-icon>
-      </ion-button>
-      }
-    </ion-buttons>
-  </ion-toolbar>
+  <app-top-toolbar
+    [pageTitle]="pageTitle"
+    [showBackButton]="false"
+    backButtonHref=""
+  ></app-top-toolbar>
 </ion-header>
 
 <ion-content>
@@ -24,14 +12,8 @@
       <ion-col size="12" size-sm="10" offset-sm="1" size-md="8" offset-md="2">
         <div class="gallery">
           @for(photo of photos(); track photo.id) {
-          <ion-card class="card">
+          <ion-card class="card" (click)="navigateToPhoto(photo.id)">
             <ion-img [src]="photo.photoUrl" class="photo"></ion-img>
-            <ion-card-header>
-              <ion-card-subtitle>{{ photo?.createdAt | date }}</ion-card-subtitle>
-            </ion-card-header>
-            <ion-card-content>
-              <p>{{ photo?.caption }}</p>
-            </ion-card-content>
           </ion-card>
           } @empty {
           <p>There are currently no photos in the gallery</p>
