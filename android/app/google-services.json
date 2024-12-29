@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "680495170100",
+    "firebase_url": "https://ang-tictactoe.firebaseio.com",
+    "project_id": "ang-tictactoe",
+    "storage_bucket": "ang-tictactoe.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:680495170100:android:6a1585bafcd378cb2e4061",
+        "android_client_info": {
+          "package_name": "io.dailyRysiaApp.ionic"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "680495170100-cqr3fijtf3kt8g02718uclmmc2rle2pi.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDK8TEvlLRus6tFjwRihMBcWyoDkigdZHc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "680495170100-cqr3fijtf3kt8g02718uclmmc2rle2pi.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

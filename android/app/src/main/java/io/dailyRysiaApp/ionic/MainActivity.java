@@ -1,4 +1,4 @@
-package io.ionic.starter;
+package io.dailyRysiaApp.ionic;
 
 import com.getcapacitor.BridgeActivity;
 
