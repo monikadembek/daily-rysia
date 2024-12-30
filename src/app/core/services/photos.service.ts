@@ -3,7 +3,9 @@ import { Photo } from '../models/photo.model';
 import { BehaviorSubject, Observable } from 'rxjs';
 import {
   collection,
+  doc,
   Firestore,
+  getDoc,
   getDocs,
   limit,
   orderBy,
@@ -106,5 +108,18 @@ export class PhotosService {
       createdAt: (docData.createdAt as unknown as Timestamp).toDate(),
     };
     return recentPhoto;
+  }
+
+  async getPhotoById(id: string): Promise<Photo> {
+    const docRef = doc(this.firestore, `photos/${id}`);
+    const snapshot = await getDoc(docRef);
+    const docData = snapshot.data() as Omit<Photo, 'id'>;
+    const photo: Photo = {
+      id: docRef.id,
+      ...docData,
+      createdAt: (docData.createdAt as unknown as Timestamp).toDate(),
+    };
+
+    return photo;
   }
 }
