@@ -1,0 +1,11 @@
+.card-header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+
+ion-icon.like-icon {
+  font-size: 18px;
+  transform: translateY(3px);
+}

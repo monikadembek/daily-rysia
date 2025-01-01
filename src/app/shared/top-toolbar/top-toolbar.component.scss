@@ -1,0 +1,11 @@
+.top-toolbar-title {
+  display: flex;
+  align-items: center;
+  margin: 0 16px;
+
+  .logo {
+    height: 40px;
+    width: auto;
+    display: inline-block;
+  }
+}
