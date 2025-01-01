@@ -16,6 +16,10 @@ export const routes: Routes = [
         loadComponent: () => import('./gallery/gallery.page').then((m) => m.GalleryPage),
       },
       {
+        path: 'gallery/photo/:photoId',
+        loadComponent: () => import('./photo/photo.page').then((m) => m.PhotoPage),
+      },
+      {
         path: 'photos-manager',
         loadComponent: () =>
           import('./photos-manager/photos-manager.page').then((m) => m.PhotosManagerPage),

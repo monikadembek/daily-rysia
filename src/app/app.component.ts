@@ -8,6 +8,8 @@ import {
   powerOutline,
   cameraOutline,
   camera,
+  heartOutline,
+  heart,
 } from 'ionicons/icons';
 import { AuthService } from './auth/auth.service';
 import { from } from 'rxjs';
@@ -25,7 +27,16 @@ export class AppComponent implements OnInit {
     private authService: AuthService,
     private pushNotificationService: PushNotificationService,
   ) {
-    addIcons({ playCircle, imageOutline, logInOutline, powerOutline, cameraOutline, camera });
+    addIcons({
+      playCircle,
+      imageOutline,
+      logInOutline,
+      powerOutline,
+      cameraOutline,
+      camera,
+      heartOutline,
+      heart,
+    });
     from(this.retrieveUserFromStorage()).pipe(takeUntilDestroyed()).subscribe();
     this.initializePush();
   }

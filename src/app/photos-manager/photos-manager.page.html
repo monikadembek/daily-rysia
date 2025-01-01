@@ -1,10 +1,9 @@
 <ion-header>
-  <ion-toolbar>
-    <div class="top-toolbar-title">
-      <ion-img src="./assets/logo.png" class="logo"></ion-img>
-      <ion-title> Daily Rysia - Photo Manager </ion-title>
-    </div>
-  </ion-toolbar>
+  <app-top-toolbar
+    [pageTitle]="pageTitle"
+    [showBackButton]="false"
+    backButtonHref=""
+  ></app-top-toolbar>
 </ion-header>
 
 <ion-content>

@@ -1,0 +1,22 @@
+<ion-toolbar>
+  @if (showBackButton) {
+    <ion-buttons slot="start">
+      <ion-back-button [defaultHref]="backButtonHref"></ion-back-button>
+    </ion-buttons>
+  }
+  <div class="top-toolbar-title">
+    <ion-img src="./assets/logo.png" class="logo"></ion-img>
+    <ion-title>{{ pageTitle }}</ion-title>
+  </div>
+  <ion-buttons slot="end">
+    @if ((isUserAuthenticated$ | async) === true) {
+      <ion-button (click)="logout()">
+        <ion-icon slot="icon-only" name="power-outline"></ion-icon>
+      </ion-button>
+    } @else {
+      <ion-button routerLink="/auth">
+        <ion-icon slot="icon-only" name="log-in-outline"></ion-icon>
+      </ion-button>
+    }
+  </ion-buttons>
+</ion-toolbar>

@@ -3,11 +3,17 @@ import { Photo } from '../models/photo.model';
 import { BehaviorSubject, Observable } from 'rxjs';
 import {
   collection,
+  deleteDoc,
+  doc,
   Firestore,
+  getDoc,
   getDocs,
   limit,
   orderBy,
   query,
+  serverTimestamp,
+  setDoc,
+  updateDoc,
   Timestamp,
 } from '@angular/fire/firestore';
 
@@ -106,5 +112,47 @@ export class PhotosService {
       createdAt: (docData.createdAt as unknown as Timestamp).toDate(),
     };
     return recentPhoto;
+  }
+
+  async getPhotoById(id: string): Promise<Photo> {
+    const docRef = doc(this.firestore, `photos/${id}`);
+    const snapshot = await getDoc(docRef);
+    const docData = snapshot.data() as Omit<Photo, 'id'>;
+    const photo: Photo = {
+      id: docRef.id,
+      ...docData,
+      createdAt: (docData.createdAt as unknown as Timestamp).toDate(),
+    };
+
+    return photo;
+  }
+
+  async likePhoto(photoId: string, userId: string): Promise<void> {
+    const likeDocRef = doc(this.firestore, `photos/${photoId}/likes/${userId}`);
+    await setDoc(likeDocRef, { likedAt: serverTimestamp() });
+  }
+
+  async removeLike(photoId: string, userId: string): Promise<void> {
+    const likeDocRef = doc(this.firestore, `photos/${photoId}/likes/${userId}`);
+    await deleteDoc(likeDocRef);
+  }
+
+  async doesUserLikePhoto(photoId: string, userId: string): Promise<boolean> {
+    const likeDocRef = doc(this.firestore, `photos/${photoId}/likes/${userId}`);
+    const snaphot = await getDoc(likeDocRef);
+    return !!snaphot;
+  }
+
+  async getLikesCount(photoId: string): Promise<number> {
+    const likesCollectionRef = collection(this.firestore, `photos/${photoId}/likes`);
+    const likesSnapshot = await getDocs(likesCollectionRef);
+    return likesSnapshot.size;
+  }
+
+  async updateLikesNumber(photoId: string): Promise<number> {
+    const likesCount = await this.getLikesCount(photoId);
+    const photoDocRef = doc(this.firestore, `photos/${photoId}`);
+    await updateDoc(photoDocRef, { likesCount });
+    return likesCount;
   }
 }

@@ -2,9 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import {
   IonContent,
   IonHeader,
-  IonTitle,
-  IonToolbar,
-  IonImg,
   IonSegment,
   IonSegmentButton,
   IonLabel,
@@ -12,6 +9,7 @@ import {
   IonSegmentContent,
 } from '@ionic/angular/standalone';
 import { AddPhotoComponent } from './add-photo/add-photo.component';
+import { TopToolbarComponent } from '../shared/top-toolbar/top-toolbar.component';
 
 @Component({
   selector: 'app-photos-manager',
@@ -23,16 +21,16 @@ import { AddPhotoComponent } from './add-photo/add-photo.component';
     IonSegment,
     IonContent,
     IonHeader,
-    IonTitle,
-    IonToolbar,
-    IonImg,
     IonLabel,
     IonSegmentView,
     IonSegmentContent,
     AddPhotoComponent,
+    TopToolbarComponent,
   ],
 })
 export class PhotosManagerPage implements OnInit {
+  pageTitle = 'Photo Manager';
+
   constructor() {}
 
   ngOnInit() {}

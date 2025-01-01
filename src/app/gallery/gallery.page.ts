@@ -1,31 +1,21 @@
 import { Component, OnInit, signal, inject, DestroyRef } from '@angular/core';
-import { CommonModule, AsyncPipe } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
   IonContent,
   IonHeader,
-  IonTitle,
-  IonToolbar,
   IonImg,
   IonCard,
-  IonCardHeader,
-  IonCardSubtitle,
-  IonCardContent,
   IonGrid,
   IonRow,
   IonCol,
-  IonButtons,
-  IonButton,
-  IonIcon,
-  AlertController,
   ViewWillEnter,
 } from '@ionic/angular/standalone';
 import { Photo } from '../core/models/photo.model';
 import { PhotosService } from '../core/services/photos.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { Observable, of } from 'rxjs';
-import { AuthService } from '../auth/auth.service';
-import { Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
+import { TopToolbarComponent } from '../shared/top-toolbar/top-toolbar.component';
 
 const importsList = [
   IonGrid,
@@ -33,20 +23,11 @@ const importsList = [
   IonCol,
   IonContent,
   IonHeader,
-  IonTitle,
-  IonToolbar,
   IonCard,
-  IonCardHeader,
-  IonCardSubtitle,
-  IonCardContent,
   IonImg,
-  IonButtons,
-  IonButton,
-  IonIcon,
+  TopToolbarComponent,
   CommonModule,
   FormsModule,
-  AsyncPipe,
-  RouterLink,
 ];
 
 @Component({
@@ -57,46 +38,20 @@ const importsList = [
   imports: importsList,
 })
 export class GalleryPage implements OnInit, ViewWillEnter {
+  pageTitle = 'Gallery';
   photos = signal<Photo[]>([]);
   destroyRef = inject(DestroyRef);
-  isUserAuthenticated$: Observable<boolean> = of(false);
   // TODO: implement virtual scrolling here
 
   constructor(
     private photosService: PhotosService,
-    private authService: AuthService,
-    private alertController: AlertController,
     private router: Router,
   ) {}
 
-  ngOnInit() {
-    this.isUserAuthenticated$ = this.authService.isUserAuthenticated$;
-  }
+  ngOnInit() {}
 
   ionViewWillEnter(): void {
     this.getPhotos();
-  }
-
-  async logout() {
-    await this.authService.logout();
-    await this.presentAlert('User has been successfully logged out');
-  }
-
-  private async presentAlert(errorMessage: string, header = 'Message'): Promise<void> {
-    const alert = await this.alertController.create({
-      header: header,
-      message: errorMessage,
-      buttons: [
-        {
-          text: 'OK',
-          role: 'confirm',
-          handler: () => {
-            this.router.navigate(['/tabs/home']);
-          },
-        },
-      ],
-    });
-    await alert.present();
   }
 
   getPhotos(): void {
@@ -113,5 +68,9 @@ export class GalleryPage implements OnInit, ViewWillEnter {
         console.log('photos from subject');
         this.photos.set(photos);
       });
+  }
+
+  navigateToPhoto(photoId: string): void {
+    this.router.navigate(['tabs', 'gallery', 'photo', photoId]);
   }
 }
