@@ -14,7 +14,7 @@
       <ion-card-subtitle>
         {{ photo()?.createdAt | date }}
         <br />
-        <ion-icon class="like-icon" name="heart-outline"></ion-icon> {{ photo()?.likesCount }}
+        <ion-icon class="like-icon" name="heart-outline"></ion-icon> {{ likesCount() }}
       </ion-card-subtitle>
       @if (showLikeButton) {
       <ion-button shape="round" (click)="toggleLike()">

@@ -54,6 +54,7 @@ export class PhotoPage implements OnInit {
   userLikesPhoto = false;
   showLikeButton = false;
   user: User | null = null;
+  likesCount = signal<number>(0);
 
   constructor(
     private navController: NavController,
@@ -86,6 +87,7 @@ export class PhotoPage implements OnInit {
         map((photo: Photo) => {
           console.log('photo: ', photo);
           this.photo.set(photo);
+          this.likesCount.set(photo.likesCount);
           return photo;
         }),
         switchMap(() => this.authService.user$),
@@ -117,5 +119,7 @@ export class PhotoPage implements OnInit {
     }
     this.userLikesPhoto = !this.userLikesPhoto;
     this.heartIcon = this.userLikesPhoto ? 'heart' : 'heart-outline';
+    const likes = await this.photosService.updateLikesNumber(this.photoId as string);
+    this.likesCount.set(likes);
   }
 }

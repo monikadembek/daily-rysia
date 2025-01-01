@@ -13,6 +13,7 @@ import {
   query,
   serverTimestamp,
   setDoc,
+  updateDoc,
   Timestamp,
 } from '@angular/fire/firestore';
 
@@ -140,5 +141,18 @@ export class PhotosService {
     const likeDocRef = doc(this.firestore, `photos/${photoId}/likes/${userId}`);
     const snaphot = await getDoc(likeDocRef);
     return !!snaphot;
+  }
+
+  async getLikesCount(photoId: string): Promise<number> {
+    const likesCollectionRef = collection(this.firestore, `photos/${photoId}/likes`);
+    const likesSnapshot = await getDocs(likesCollectionRef);
+    return likesSnapshot.size;
+  }
+
+  async updateLikesNumber(photoId: string): Promise<number> {
+    const likesCount = await this.getLikesCount(photoId);
+    const photoDocRef = doc(this.firestore, `photos/${photoId}`);
+    await updateDoc(photoDocRef, { likesCount });
+    return likesCount;
   }
 }
