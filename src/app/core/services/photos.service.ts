@@ -3,6 +3,7 @@ import { Photo } from '../models/photo.model';
 import { BehaviorSubject, Observable } from 'rxjs';
 import {
   collection,
+  deleteDoc,
   doc,
   Firestore,
   getDoc,
@@ -10,6 +11,8 @@ import {
   limit,
   orderBy,
   query,
+  serverTimestamp,
+  setDoc,
   Timestamp,
 } from '@angular/fire/firestore';
 
@@ -121,5 +124,21 @@ export class PhotosService {
     };
 
     return photo;
+  }
+
+  async likePhoto(photoId: string, userId: string): Promise<void> {
+    const likeDocRef = doc(this.firestore, `photos/${photoId}/likes/${userId}`);
+    await setDoc(likeDocRef, { likedAt: serverTimestamp() });
+  }
+
+  async removeLike(photoId: string, userId: string): Promise<void> {
+    const likeDocRef = doc(this.firestore, `photos/${photoId}/likes/${userId}`);
+    await deleteDoc(likeDocRef);
+  }
+
+  async doesUserLikePhoto(photoId: string, userId: string): Promise<boolean> {
+    const likeDocRef = doc(this.firestore, `photos/${photoId}/likes/${userId}`);
+    const snaphot = await getDoc(likeDocRef);
+    return !!snaphot;
   }
 }

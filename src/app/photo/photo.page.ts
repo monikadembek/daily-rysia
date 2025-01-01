@@ -11,12 +11,16 @@ import {
   IonCardContent,
   NavController,
   IonLoading,
+  IonIcon,
+  IonButton,
 } from '@ionic/angular/standalone';
 import { TopToolbarComponent } from '../shared/top-toolbar/top-toolbar.component';
 import { Photo } from '../core/models/photo.model';
 import { ActivatedRoute } from '@angular/router';
 import { PhotosService } from '../core/services/photos.service';
-import { catchError, EMPTY, finalize, from, map, switchMap, take } from 'rxjs';
+import { catchError, EMPTY, finalize, from, map, of, switchMap, take } from 'rxjs';
+import { AuthService } from '../auth/auth.service';
+import { User } from '../core/models/user.model';
 
 @Component({
   selector: 'app-photo',
@@ -24,6 +28,7 @@ import { catchError, EMPTY, finalize, from, map, switchMap, take } from 'rxjs';
   styleUrls: ['./photo.page.scss'],
   standalone: true,
   imports: [
+    IonButton,
     IonContent,
     IonHeader,
     IonImg,
@@ -32,6 +37,7 @@ import { catchError, EMPTY, finalize, from, map, switchMap, take } from 'rxjs';
     IonCardSubtitle,
     IonCardContent,
     IonLoading,
+    IonIcon,
     CommonModule,
     FormsModule,
     TopToolbarComponent,
@@ -44,11 +50,16 @@ export class PhotoPage implements OnInit {
   photo = signal<Photo | null>(null);
   isLoading = false;
   errorMsg = '';
+  heartIcon: 'heart-outline' | 'heart' = 'heart-outline';
+  userLikesPhoto = false;
+  showLikeButton = false;
+  user: User | null = null;
 
   constructor(
     private navController: NavController,
     private route: ActivatedRoute,
     private photosService: PhotosService,
+    private authService: AuthService,
   ) {}
 
   ngOnInit() {
@@ -77,10 +88,34 @@ export class PhotoPage implements OnInit {
           this.photo.set(photo);
           return photo;
         }),
+        switchMap(() => this.authService.user$),
+        switchMap((user) => {
+          if (!user) {
+            return of(false);
+          }
+          this.user = user;
+          return from(this.photosService.doesUserLikePhoto(this.photoId as string, user.userId));
+        }),
+        take(1),
+        map((wasPhotoLiked) => {
+          this.userLikesPhoto = wasPhotoLiked;
+          this.heartIcon = this.userLikesPhoto ? 'heart' : 'heart-outline';
+        }),
         finalize(() => {
           this.isLoading = false;
+          this.showLikeButton = !!this.user;
         }),
       )
       .subscribe();
+  }
+
+  async toggleLike(): Promise<void> {
+    if (this.userLikesPhoto) {
+      await this.photosService.removeLike(this.photoId as string, this.user?.userId as string);
+    } else {
+      await this.photosService.likePhoto(this.photoId as string, this.user?.userId as string);
+    }
+    this.userLikesPhoto = !this.userLikesPhoto;
+    this.heartIcon = this.userLikesPhoto ? 'heart' : 'heart-outline';
   }
 }

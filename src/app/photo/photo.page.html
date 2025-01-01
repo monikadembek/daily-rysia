@@ -10,8 +10,17 @@
   @if (photo()) {
   <ion-card class="card">
     <ion-img [src]="photo()?.photoUrl" class="photo"></ion-img>
-    <ion-card-header>
-      <ion-card-subtitle>{{ photo()?.createdAt | date }}</ion-card-subtitle>
+    <ion-card-header class="card-header">
+      <ion-card-subtitle>
+        {{ photo()?.createdAt | date }}
+        <br />
+        <ion-icon class="like-icon" name="heart-outline"></ion-icon> {{ photo()?.likesCount }}
+      </ion-card-subtitle>
+      @if (showLikeButton) {
+      <ion-button shape="round" (click)="toggleLike()">
+        <ion-icon slot="icon-only" [name]="heartIcon"></ion-icon>
+      </ion-button>
+      }
     </ion-card-header>
     <ion-card-content>
       <p>{{ photo()?.caption }}</p>
