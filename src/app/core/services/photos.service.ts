@@ -139,8 +139,9 @@ export class PhotosService {
 
   async doesUserLikePhoto(photoId: string, userId: string): Promise<boolean> {
     const likeDocRef = doc(this.firestore, `photos/${photoId}/likes/${userId}`);
-    const snaphot = await getDoc(likeDocRef);
-    return !!snaphot;
+    const snapshot = await getDoc(likeDocRef);
+    // if snaphot.data() returns undefined there is no document
+    return !!snapshot.data();
   }
 
   async getLikesCount(photoId: string): Promise<number> {
