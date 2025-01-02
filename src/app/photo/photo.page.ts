@@ -51,7 +51,7 @@ export class PhotoPage implements OnInit {
   isLoading = false;
   errorMsg = '';
   heartIcon: 'heart-outline' | 'heart' = 'heart-outline';
-  userLikesPhoto = false;
+  isAlreadyLiked = false;
   showLikeButton = false;
   user: User | null = null;
   likesCount = signal<number>(0);
@@ -100,8 +100,8 @@ export class PhotoPage implements OnInit {
         }),
         take(1),
         map((wasPhotoLiked) => {
-          this.userLikesPhoto = wasPhotoLiked;
-          this.heartIcon = this.userLikesPhoto ? 'heart' : 'heart-outline';
+          this.isAlreadyLiked = wasPhotoLiked;
+          this.heartIcon = this.isAlreadyLiked ? 'heart' : 'heart-outline';
         }),
         finalize(() => {
           this.isLoading = false;
@@ -112,13 +112,13 @@ export class PhotoPage implements OnInit {
   }
 
   async toggleLike(): Promise<void> {
-    if (this.userLikesPhoto) {
+    if (this.isAlreadyLiked) {
       await this.photosService.removeLike(this.photoId as string, this.user?.userId as string);
     } else {
       await this.photosService.likePhoto(this.photoId as string, this.user?.userId as string);
     }
-    this.userLikesPhoto = !this.userLikesPhoto;
-    this.heartIcon = this.userLikesPhoto ? 'heart' : 'heart-outline';
+    this.isAlreadyLiked = !this.isAlreadyLiked;
+    this.heartIcon = this.isAlreadyLiked ? 'heart' : 'heart-outline';
     const likes = await this.photosService.updateLikesNumber(this.photoId as string);
     this.likesCount.set(likes);
   }
